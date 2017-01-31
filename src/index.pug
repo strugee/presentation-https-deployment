@@ -1,0 +1,147 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+		title HTTPS deployment
+
+		link(rel='stylesheet', type='text/css', href='build/build.css')
+
+	body
+
+		article.deck
+
+			section
+				h1 HTTPS deployment
+				p Alternate title: "HTTPS is a shitshow"
+
+			section
+				h2 AJ
+				h3 he/him
+				h3 Winter 2 batch
+				h3 Security/privacy nerd
+
+			section(data-bespoke-hash='covering')
+				h2 What we're covering
+				h3 tl;dr: how HTTPS works + what to do for optimal security
+				ul
+					li Basics
+					li Authenticity
+					li Cipher suites
+					li Revocation
+					li Performance
+
+			section(data-bespoke-hash='not-covering')
+				h2 What we're <strong>not</strong> covering
+				ul
+					li
+						a(href='https://strugee.net/presentation-security-design/') System-level stuff
+					li
+						a(href='https://strugee.net/presentation-webapp-security/') Webapp stuff
+					li
+						a(href='https://strugee.net/presentation-operational-security/') Operational security
+					li Cryptography (beyond the basics)
+					li UX issues
+
+			section
+				h2 Terminology
+				h3 SSL / TLS
+				h3 HTTPS
+				h3 Key
+				h3 Public key / private keys
+
+			section
+				h2 Attack types
+				h3 Passive attack
+				h3 Active attack (man-in-the-middle attack)
+
+			section
+				h2 Three important crypto properties
+				h3 Confidentiality (is my PayPal session secret)
+				h3 Integrity (can anybody mess with the PayPal HTML)
+				h3 Authenticity (am I talking to the real <code>paypal.com</code>)
+				
+			section
+				h2 Confidentiality + integrity:
+				h3 Just math (mostly)
+
+			section
+				h2 Authenticity
+				h3 Certificate Authorities + the CA system
+				h3 CAs are trusted entities responsible for providing trust
+				h3 Certificates bind a domain name to a keypair
+				h3 Chains of trust: site certificate -> intermediate CA -> intermediate CA -> root CA
+				h3 Demo
+
+			section
+				h2 Problems
+				h3 CAs can be and are compromised
+				h3 CAs are vulnerable to government requests
+				h3 CAs are just generally sketchy, because why not
+				h3 #[em Any] CA can issue a certificate
+				h3 Only as strong as the weakest link
+				h3 Demo
+
+			section
+				iframe(width='560', height='315', src='https://www.youtube.com/embed/8N4sb-SEpcg?rel=0&start=913&end=992', frameborder='0', allowfullscreen)
+
+			section
+				//- TODO links
+				h2 Solutions?
+				h3 DNSSEC + DANE
+				h3 CAA DNS records
+				h3 Convergence
+				h3 Certificate Transparency
+				h3 HTTP Public Key Pinning
+
+			section
+				h2 Cipher suites
+				h3 Different algorithms for encrypting data
+				h3 Certain suites are better than others
+				h3 Certain suites <strong>must</strong> be disabled
+				h3 Security/compatibility balance
+
+			section
+				h2 Picking cipher suites
+				h3 Easiest: <a href="https://mozilla.github.io/server-side-tls/ssl-config-generator/">Mozilla's configuration generator</a>
+				h3 Otherwise prefer suites using ECDHE, disable <a href="https://wiki.mozilla.org/Security/Server_Side_TLS#Mandatory_discards">weak cipher suites</a>
+
+			section
+				h2 Forward Secrecy
+				h3 Ensures communication confidentiality even in the face of key compromise
+				h3 Negotiate a shared key that doesn't hit the wire and is discarded when the session ends
+				h3 Cipher suites with ECDHE negotiation
+			section
+				h2 Revocation
+				h3 "This certificate is no longer valid"
+				h3 CRLs
+				h3 OCSP
+
+			section
+				h2 CRLs
+				h3 Certificate Revocation Lists
+				h3 Too much bandwidth/disk space
+				h3 Don't scale well in catastrophic situations (e.g. Heartbleed)
+				h3 CRLSet/OneCRL
+
+			section
+				h2 OCSP
+				h3 Online Certificate Status Protocol
+				h3 Realtime query for revocation status
+				h3 Certificates include OCSP responder URLs
+				h3 OCSP responders return signed certificate status assertions
+
+			section
+				h2 OCSP problems
+				h3 Leaks browsing history to CAs
+				h3 Induces high load on CAs
+				h3 OCSP responders are unreliable
+				h3 UAs can't hard-fail
+
+			section
+				h2 OCSP stapling
+				h3 Servers query OCSP responder servers
+				h3 Signed OCSP response is sent along with the certificate
+				h3 OCSP Must-Staple
+
+		script(src='build/build.js')
