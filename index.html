@@ -3,109 +3,240 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>Publishing</title>
+		<title>HTTPS deployment</title>
 		<link rel="stylesheet" type="text/css" href="build/build.css">
 	</head>
 	<body>
 		<article class="deck">
 			<section>
-				<h1>Publishing</h1>
+				<h1>HTTPS deployment</h1>
+				<p>Alternate title: "HTTPS is a shitshow"</p>
 			</section>
 			<section>
 				<h2>AJ</h2>
-				<h3>...but honestly y'all probably know me by now</h3>
+				<h3>he/him</h3>
+				<h3>Winter 2 batch</h3>
+				<h3>Security/privacy nerd</h3>
+			</section>
+			<section data-bespoke-hash="covering">
+				<h2>What we're covering</h2>
+				<h3>tl;dr: how HTTPS works + what to do for optimal security</h3>
+				<ul>
+					<li>Basics</li>
+					<li>Authenticity</li>
+					<li>Cipher suites</li>
+					<li>Revocation</li>
+					<li>Performance</li>
+					<li>Implementation</li>
+				</ul>
+			</section>
+			<section data-bespoke-hash="not-covering">
+				<h2>What we're <strong>not</strong> covering</h2>
+				<ul>
+					<li><a href="https://strugee.net/presentation-security-design/">System-level stuff</a></li>
+					<li><a href="https://strugee.net/presentation-webapp-security/">Webapp stuff</a></li>
+					<li><a href="https://strugee.net/presentation-operational-security/">Operational security</a></li>
+					<li>Cryptography (beyond the basics)</li>
+					<li>UX issues</li>
+				</ul>
 			</section>
 			<section>
-				<h2>Deployment</h2>
-				<h3>GitHub Pages</h3>
-				<h3>Heroku</h3>
-				<h3>Other options</h3>
+				<h2>Terminology</h2>
+				<h3>HTTPS</h3>
+				<h3>SSL / TLS</h3>
+				<h3>Key</h3>
+				<h3>Public key / private keys</h3>
+				<h3>TLS handshake</h3>
+				<h3>SSL termination</h3>
 			</section>
 			<section>
-				<h2>GitHub Pages</h2>
-				<h3>Free</h3>
-				<h3>Static sites</h3>
-				<h3>Automatic with git pushes</h3>
+				<h2>Attack types</h2>
+				<h3>Passive attack</h3>
+				<h3>Active attack (man-in-the-middle attack)</h3>
 			</section>
 			<section>
-				<h2>GitHub Pages types</h2>
-				<h3>Project pages -> <code>gh-pages</code> branch</h3>
-				<h3>User/org pages -> <code>master</code> branch, <code>$username.github.io</code> repo</h3>
-				<h3>You can also use a <code>docs/</code> directory or <code>gh-pages</code> for user/org pages</h3>
-				<h3><a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/">Docs</a></h3>
+				<h2>Three important crypto properties</h2>
+				<h3>Confidentiality (is my PayPal session secret)</h3>
+				<h3>Integrity (can anybody mess with the PayPal HTML)</h3>
+				<h3>Authenticity (am I talking to the real <code>paypal.com</code>)</h3>
 			</section>
 			<section>
-				<h2>Demo time</h2>
+				<h2>Confidentiality + integrity:</h2>
+				<h3>Just math (mostly)</h3>
 			</section>
 			<section>
-				<h2>GitHub Pages goodies</h2>
-				<h3>Automatic Jekyll builds</h3>
-				<h3>Custom domains with a <code>CNAME</code> file (note: no HTTPS)</h3>
+				<h2>Authenticity</h2>
+				<h3>Certificate Authorities + the CA system</h3>
+				<h3>CAs are trusted entities responsible for providing trust</h3>
+				<h3>Certificates bind a domain name to a keypair</h3>
+				<h3>Chains of trust: site certificate -> intermediate CA -> intermediate CA -> root CA</h3>
+				<h3>Demo</h3>
 			</section>
 			<section>
-				<h2>Heroku</h2>
-				<h3>Managed hosting</h3>
-				<h3>Designed for dynamic apps</h3>
+				<h2>Problems</h2>
+				<h3>CAs can be and are compromised</h3>
+				<h3>CAs are vulnerable to government requests</h3>
+				<h3>CAs are just generally sketchy, because why not</h3>
+				<h3><em>Any</em> CA can issue a certificate</h3>
+				<h3>Only as strong as the weakest link</h3>
+				<h3>Demo</h3>
 			</section>
 			<section>
-				<h2>"Managed hosting"</h2>
-				<h3>You don't worry about OS upgrades, etc.</h3>
-				<h3>"Just run my app" -> Heroku just runs your app</h3>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/8N4sb-SEpcg?rel=0&amp;start=913&amp;end=992" frameborder="0" allowfullscreen></iframe>
 			</section>
 			<section>
-				<h2><code>Procfile</code></h2>
-				<h3>A file declaring different kinds of processes</h3>
-				<h3>Web workers, job queues, etc.</h3>
+				<h2>Solutions?</h2>
+				<h3>DNSSEC + DANE</h3>
+				<h3>CAA DNS records</h3>
+				<h3>Convergence</h3>
+				<h3>Certificate Transparency</h3>
+				<h3>HTTP Public Key Pinning</h3>
 			</section>
 			<section>
-				<h2><code>Procfile</code> example</h2>
-				<!-- TODO find out why this doesn't style properly--><code>
-					<pre>web: node index.js
-</pre></code>
+				<h2>Cipher suites</h2>
+				<h3>Different algorithms for encrypting data</h3>
+				<h3>Certain suites are better than others</h3>
+				<h3>Certain suites <strong>must</strong> be disabled</h3>
+				<h3>Security/compatibility balance</h3>
 			</section>
 			<section>
-				<h2>Dyno</h2>
-				<h3>Compute unit on Heroku</h3>
-				<h3>Basically just a container running a kind of process from your app</h3>
-				<h3>You decide how many dynos of which kind</h3>
-				<h3>Scaling</h3>
+				<h2>Picking cipher suites</h2>
+				<h3>Easiest: <a href="https://mozilla.github.io/server-side-tls/ssl-config-generator/">Mozilla's configuration generator</a></h3>
+				<h3>Otherwise prefer suites using ECDHE, disable <a href="https://wiki.mozilla.org/Security/Server_Side_TLS#Mandatory_discards">weak cipher suites</a></h3>
 			</section>
 			<section>
-				<h2>Deployment</h2>
-				<pre><code class="language-shell">$ heroku create
-$ git push heroku master
-</code></pre>
+				<h2>(Perfect) Forward Secrecy</h2>
+				<h3>Ensures communication confidentiality even in the face of key compromise</h3>
+				<h3>Negotiate a shared key that doesn't hit the wire and is discarded when the session ends</h3>
+				<h3>Cipher suites with ECDHE negotiation</h3>
 			</section>
 			<section>
-				<h2>Demo</h2>
+				<h2>Revocation</h2>
+				<h3>"This certificate is no longer valid"</h3>
+				<h3>CRLs</h3>
+				<h3>OCSP</h3>
 			</section>
 			<section>
-				<h2>Logs on Heroku</h2>
-				<h3>Aggregated from all sources</h3>
-				<h3>Apps in dynos, Heroku dyno manager, etc.</h3>
-				<h3>1.5k lines</h3>
-				<h3><code>heroku logs --tail</code></h3>
+				<h2>CRLs</h2>
+				<h3>Certificate Revocation Lists</h3>
+				<h3>Too much bandwidth/disk space</h3>
+				<h3>Don't scale well in catastrophic situations (e.g. Heartbleed)</h3>
+				<h3>CRLSet/OneCRL</h3>
 			</section>
 			<section>
-				<h2>Demo</h2>
+				<h2>OCSP</h2>
+				<h3>Online Certificate Status Protocol</h3>
+				<h3>Realtime query for revocation status</h3>
+				<h3>Certificates include OCSP responder URLs</h3>
+				<h3>OCSP responders return signed certificate status assertions</h3>
 			</section>
 			<section>
-				<h2>Databases</h2>
-				<h3>Heroku addons</h3>
-				<h3>"Extra stuff"</h3>
-				<h3>Heroku config values tell you where to connect</h3>
-				<h3>Exposed in the environment</h3>
+				<h2>OCSP problems</h2>
+				<h3>Leaks browsing history to CAs</h3>
+				<h3>Induces high load on CAs</h3>
+				<h3>OCSP responders are unreliable</h3>
+				<h3>UAs can't hard-fail</h3>
 			</section>
 			<section>
-				<h2>Demo</h2>
+				<h2>OCSP stapling</h2>
+				<h3>Servers query OCSP responder servers</h3>
+				<h3>Signed OCSP response is sent along with the certificate</h3>
+				<h3>OCSP Must-Staple</h3>
 			</section>
 			<section>
-				<h2 class="bullet">Access this presentation again</h2>
-				<h3><a href="https://strugee.net/presentation-publishing/">https://strugee.net/presentation-publishing/</a></h3>
-				<p>
-					<!-- TODO: fix this for the new URL--><img src="images/qr.png" alt="QR code to presentation URL" width="200" height="200">
-				</p>
-				<h4>Or, <a href="https://github.com/strugee/presentation-publishing">check out the source</a>.</h4>
+				<h2>Performance</h2>
+				<quote>TLS has exactly one performance problem: it is not used widely enough. <i>Everything else can be optimized.</i></quote>
+				<cite><a href="https://istlsfastyet.com/">istlsfastyet.com</a></cite>
+			</section>
+			<section>
+				<h2>Optimizing TLS handshakes</h2>
+				<h3>Mostly eliminating round-trips</h3>
+				<h3>TLS session resumption (session ids, client sends id and server queries cache)</h3>
+				<h3>TLS session tickets (client sends connection state encrypted to server's key; be careful about PFS)</h3>
+				<h3>TLS False Start (timing modification)</h3>
+			</section>
+			<section>
+				<h2>More optimizations</h2>
+				<h3>Dual RSA/EC certificate deployments</h3>
+				<h3><a href="https://istlsfastyet.com/">istlsfastyet.com</a></h3>
+			</section>
+			<section>
+				<h2>Dispelling myths</h2>
+				<h3>TLS is not computationally expensive</h3>
+				<quote>In order to [deploy HTTPS on Gmail] we had to deploy <em>no additional machines</em> and <em>no special hardware</em>. On our production frontend machines, SSL/TLS accounts for less than 1% of the CPU load, less than 10KB of memory per connection and less than 2% of network overhead.</quote>
+				<cite><a href="https://www.imperialviolet.org/2010/06/25/overclocking-ssl.html">Adam Langley</a> of Google</cite>
+				<h3>TLS is also <a href="https://letsencrypt.org">not monetarily expensive</a></h3>
+				<h3>We really do want all of the web using HTTPS</h3>
+			</section>
+			<section>
+				<h2>Implementing - Mixed Content</h2>
+				<h3>HTTP content in an HTTPS page</h3>
+				<h3>Active Mixed Content is blocked</h3>
+				<h3>Passive Mixed Content is allowed (for now)</h3>
+			</section>
+			<section>
+				<h2><code>upgrade-insecure-requests</code></h2>
+				<h3><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests">Content Security Policy directive</a></h3>
+				<h3>Client support indicated by <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Upgrade-Insecure-Requests"><code>Upgrade-Insecure-Requests</code></a> header</h3>
+			</section>
+			<section>
+				<h2><code>block-all-mixed-content</code></h2>
+				<h3><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/block-all-mixed-content">Content Security Policy directive</a></h3>
+				<h3>No-op when used with <code>upgrade-insecure-requests</code></h3>
+			</section>
+			<section>
+				<h2>HTTP Strict Transport Security</h2>
+				<h3>"Never connect to this website insecurely"</h3>
+				<h3><code>Strict-Transport-Security</code> header</h3>
+				<h3>Set long durations (eventually)</h3>
+				<h3><code>includeSubdomains</code></h3>
+				<h3>Preloading to mitigate first-use attacks</h3>
+			</section>
+			<section>
+				<h2>HTTP Public Key Pinning</h2>
+				<h3>"Require these fingerprints in the trust chain"</h3>
+				<h3>Mitigates misissuance</h3>
+				<h3>You <em>can</em> set it to leaf certs but you gotta be careful</h3>
+				<h3>Pinning intermediate certs is easier</h3>
+				<h3>Suffers from first-use attacks</h3>
+			</section>
+			<section>
+				<h2>Server Name Indication (SNI)</h2>
+				<h3>"I'm initiating a connection to this domain name"</h3>
+				<h3>Lets the server present the right certificate</h3>
+				<h3>Eliminates the use of multiple IPs</h3>
+				<h3>All modern clients support this</h3>
+			</section>
+			<section>
+				<h2>Rough order</h2>
+				<ol>
+					<li>Make HTTPS available</li>
+					<li>Fix Mixed Content</li>
+					<li>Redirect HTTP -> HTTPS (use permanent redirects)</li>
+					<li>HTTP Strict Transport Security</li>
+					<li>Fix your cipher suites</li>
+					<li>HSTS preload list</li>
+					<li>OCSP Stapling</li>
+					<li>OCSP Must-Staple</li>
+					<li>HTTP Public Key Pinning</li>
+				</ol>
+			</section>
+			<section>
+				<h2>Tools</h2>
+				<h3><a href="https://www.ssllabs.com/ssltest/index.html">SSL Labs</a></h3>
+				<h3><a href="https://letsencrypt.org">Let's Encrypt</a></h3>
+				<h3><a href="https://certbot.eff.org/">Certbot</a></h3>
+				<h3><a href="https://caddyserver.com/">Caddy</a></h3>
+			</section>
+			<section>
+				<h2>Thanks!</h2>
+				<h3>Y'all have stamina</h3>
+				<h3>Questions?</h3>
+			</section>
+			<section>
+				<h2>Access this presentation again</h2>
+				<h3><a href="https://strugee.net/presentation-https-deployment">https://strugee.net/presentation-https-deployment</a></h3>
+				<h3>Or get the <a href="https://github.com/strugee/presentation-https-deployment">source code</a></h3>
 			</section>
 		</article>
 		<script src="build/build.js"></script>
